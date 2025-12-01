@@ -18,6 +18,7 @@
         "symfony/yaml": "7.4.*"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friendsofphp/php-cs-fixer": "^3.91",
         "phpunit/phpunit": "^12.4",
         "symfony/browser-kit": "7.4.*",

@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Tests\Integration;
+declare(strict_types=1);
 
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+namespace App\Tests\Config;
+
+use Testcontainers\Modules\PostgresContainer;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Testcontainers\Container\StartedGenericContainer;
-use Testcontainers\Modules\PostgresContainer;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 class TestContainersWebTestCase extends WebTestCase
 {
@@ -41,19 +43,29 @@ class TestContainersWebTestCase extends WebTestCase
 
         $databaseUrl = "postgres://app_user:s3cr3t@{$host}:{$port}/app_test?serverVersion=18&charset=utf8";
 
-        $_ENV['DATABASE_URL'] = $databaseUrl;
+        $_ENV['DATABASE_URL']    = $databaseUrl;
         $_SERVER['DATABASE_URL'] = $databaseUrl;
 
         self::bootKernel();
 
         $application = new Application(self::$kernel);
         $application->setAutoExit(false);
-        $input = new ArrayInput([
-            'command' => 'doctrine:schema:update',
-            '--force' => true,
+
+        $runMigrationsInput = new ArrayInput([
+            'command'          => 'doctrine:migrations:migrate',
+            '--no-interaction' => true,
+            '--all-or-nothing' => true,
         ]);
 
-        $application->run($input, new ConsoleOutput());
+        $application->run($runMigrationsInput, new NullOutput());
+
+        $runFixturesInput = new ArrayInput([
+            'command'               => 'doctrine:fixtures:load',
+            '--no-interaction'      => true,
+            '--purge-with-truncate' => true,
+        ]);
+
+        $application->run($runFixturesInput, new NullOutput());
     }
 
     protected function tearDown(): void

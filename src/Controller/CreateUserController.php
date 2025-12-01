@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CreateUserController extends AbstractController
 {
@@ -17,7 +19,7 @@ class CreateUserController extends AbstractController
     ) {
     }
 
-    #[Route('/', name: 'create_user', methods: ['POST'])]
+    #[Route('/users', name: 'create_user', methods: ['POST'])]
     public function __invoke(Request $request): JsonResponse
     {
         $content = json_decode($request->getContent(), true);
