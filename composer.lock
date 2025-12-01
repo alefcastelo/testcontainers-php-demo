@@ -4,8 +4,74 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07ae28a473581a800560f84dba3a4b09",
+    "content-hash": "adc886f048767a0987be50f8bab66e9d",
     "packages": [
+        {
+            "name": "basis-company/nats",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/basis-company/nats.php.git",
+                "reference": "179842dffe852e9583994fb20d8780e67169c2f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/basis-company/nats.php/zipball/179842dffe852e9583994fb20d8780e67169c2f1",
+                "reference": "179842dffe852e9583994fb20d8780e67169c2f1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "ext-sodium": "*",
+                "friendsofphp/php-cs-fixer": "^3.9",
+                "monolog/monolog": "^2.3.5",
+                "phan/phan": "^5.3",
+                "phpunit/phpunit": "^9.5"
+            },
+            "suggest": {
+                "ext-sodium": "Provides Ed25519 for nkey authentication",
+                "paragonie/sodium_compat": "Provides Ed25519 for nkey authentication if sodium is not available"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Basis\\Nats\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "mit"
+            ],
+            "authors": [
+                {
+                    "name": "dmitry krokhin",
+                    "email": "nekufa@gmail.com"
+                }
+            ],
+            "description": "nats jetstream client for php",
+            "keywords": [
+                "bucket",
+                "client",
+                "jetstream",
+                "key-value",
+                "messaging",
+                "nats",
+                "publish",
+                "queue",
+                "request",
+                "response",
+                "storage",
+                "streaming",
+                "subscribe"
+            ],
+            "support": {
+                "issues": "https://github.com/basis-company/nats.php/issues",
+                "source": "https://github.com/basis-company/nats.php/tree/1.1.2"
+            },
+            "time": "2025-09-25T11:27:12+00:00"
+        },
         {
             "name": "doctrine/collections",
             "version": "2.4.0",

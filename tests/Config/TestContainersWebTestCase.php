@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Config;
 
 use Testcontainers\Modules\PostgresContainer;
+use Testcontainers\Container\GenericContainer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -15,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 class TestContainersWebTestCase extends WebTestCase
 {
     protected static ?StartedGenericContainer $postgresContainer = null;
+    protected static ?StartedGenericContainer $natsContainer     = null;
 
     public static function createClient(array $options = [], array $server = []): KernelBrowser
     {
@@ -38,13 +40,26 @@ class TestContainersWebTestCase extends WebTestCase
             ->withExposedPorts(5432)
             ->start();
 
-        $host = $this->postgresContainer->getHost();
-        $port = $this->postgresContainer->getFirstMappedPort();
+        $postgresHost = $this->postgresContainer->getHost();
+        $postgresPort = $this->postgresContainer->getFirstMappedPort();
 
-        $databaseUrl = "postgres://app_user:s3cr3t@{$host}:{$port}/app_test?serverVersion=18&charset=utf8";
+        $databaseUrl = "postgres://app_user:s3cr3t@{$postgresHost}:{$postgresPort}/app_test?serverVersion=18&charset=utf8";
 
-        $_ENV['DATABASE_URL']    = $databaseUrl;
-        $_SERVER['DATABASE_URL'] = $databaseUrl;
+        $_ENV['DATABASE_URL'] = $databaseUrl;
+
+        // $this->natsContainer = new GenericContainer(image: 'nats:latest')
+        //     ->withEntryPoint('/nats-server')
+        //     ->withCommand(['--config', '/nats-server.conf', '--user', 'app_user', '--pass', 's3cr3t'])
+        //     ->withExposedPorts(4222)
+        //     ->start();
+
+        // $natsHost = $this->natsContainer->getHost();
+        // $natsPort = $this->natsContainer->getFirstMappedPort();
+
+        // $_ENV['NATS_HOST'] = $natsHost;
+        // $_ENV['NATS_PORT'] = $natsPort;
+        // $_ENV['NATS_USER'] = 'app_user';
+        // $_ENV['NATS_PASS'] = 's3cr3t';
 
         self::bootKernel();
 
@@ -73,5 +88,6 @@ class TestContainersWebTestCase extends WebTestCase
         parent::tearDown();
 
         $this->postgresContainer?->stop();
+        $this->natsContainer?->stop();
     }
 }

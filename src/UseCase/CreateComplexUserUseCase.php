@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\UseCase;
 
 use App\Entity\User;
+use Basis\Nats\Client;
 use InvalidArgumentException;
 use App\Repository\UserRepository;
-use App\Provider\EmailSenderProvider;
 
 class CreateComplexUserUseCase
 {
     public function __construct(
         protected readonly UserRepository $userRepository,
-        protected readonly EmailSenderProvider $emailSenderProvider,
+        // protected readonly Client $natsClient,
     ) {
     }
 
@@ -38,11 +38,9 @@ class CreateComplexUserUseCase
             ->withPasswordHash($passwordHash);
 
         $this->userRepository->save($user);
-        $this->emailSenderProvider->sendEmail(
-            $email,
-            'Welcome to our app',
-            'Welcome to our app',
-        );
+
+        // $this->natsClient->publish('user.created', $user->jsonSerialize());
+        // $this->natsClient->process();
 
         return $user;
     }
