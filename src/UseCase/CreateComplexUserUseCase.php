@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\UseCase;
 
 use App\Entity\User;
-use Basis\Nats\Client;
 use InvalidArgumentException;
 use App\Repository\UserRepository;
 
@@ -13,7 +12,6 @@ class CreateComplexUserUseCase
 {
     public function __construct(
         protected readonly UserRepository $userRepository,
-        // protected readonly Client $natsClient,
     ) {
     }
 
@@ -38,9 +36,6 @@ class CreateComplexUserUseCase
             ->withPasswordHash($passwordHash);
 
         $this->userRepository->save($user);
-
-        // $this->natsClient->publish('user.created', $user->jsonSerialize());
-        // $this->natsClient->process();
 
         return $user;
     }
