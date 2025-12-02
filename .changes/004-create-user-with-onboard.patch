@@ -1,0 +1,33 @@
+diff --git a/tests/Integration/CreateUserTest.php b/tests/Integration/CreateUserTest.php
+index c36117b..78ee341 100644
+--- a/tests/Integration/CreateUserTest.php
++++ b/tests/Integration/CreateUserTest.php
+@@ -33,4 +33,28 @@ class CreateUserTest extends WebTestCase
+ 
+         $this->assertEquals([], array_diff(['email' => 'test@example.com'], $actual));
+     }
++
++    public function testCreateUserWithOnboardWithMockedRepository()
++    {
++        $userRepository = $this->createMock(UserRepository::class);
++        $userRepository->expects($this->once())
++            ->method('save');
++
++        $client = static::createClient();
++
++        $client->getContainer()->set(UserRepository::class, $userRepository);
++
++        $input = json_encode([
++            'email'    => 'test@example.com',
++            'password' => 'password',
++        ]);
++
++        $client->request('POST', '/users', content: $input);
++
++        $this->assertResponseStatusCodeSame(JsonResponse::HTTP_CREATED);
++
++        $actual = json_decode($client->getResponse()->getContent(), true);
++
++        $this->assertEquals([], array_diff(['email' => 'test@example.com'], $actual));
++    }
+ }

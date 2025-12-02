@@ -1,0 +1,19 @@
+diff --git a/tests/Integration/CreateUserTest.php b/tests/Integration/CreateUserTest.php
+index 0831c6f..1ae3179 100644
+--- a/tests/Integration/CreateUserTest.php
++++ b/tests/Integration/CreateUserTest.php
+@@ -28,5 +28,14 @@ class CreateUserTest extends WebTestCase
+         $client->request('POST', '/users/without-onboard', content: $input);
+ 
+         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_CREATED);
++
++        $expected = json_encode([
++            'id'    => 1,
++            'email' => 'test@example.com',
++        ]);
++
++        $actual = $client->getResponse()->getContent();
++
++        $this->assertJsonStringEqualsJsonString($expected, $actual);
+     }
+ }

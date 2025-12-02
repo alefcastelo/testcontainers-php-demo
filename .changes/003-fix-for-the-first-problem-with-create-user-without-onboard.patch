@@ -1,0 +1,20 @@
+diff --git a/tests/Integration/CreateUserTest.php b/tests/Integration/CreateUserTest.php
+index 1ae3179..ba3b72a 100644
+--- a/tests/Integration/CreateUserTest.php
++++ b/tests/Integration/CreateUserTest.php
+@@ -29,13 +29,8 @@ class CreateUserTest extends WebTestCase
+ 
+         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_CREATED);
+ 
+-        $expected = json_encode([
+-            'id'    => 1,
+-            'email' => 'test@example.com',
+-        ]);
+-
+-        $actual = $client->getResponse()->getContent();
++        $actual = json_decode($client->getResponse()->getContent(), true);
+ 
+-        $this->assertJsonStringEqualsJsonString($expected, $actual);
++        $this->assertEquals([], array_diff(['email' => 'test@example.com'], $actual));
+     }
+ }

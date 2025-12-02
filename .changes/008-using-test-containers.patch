@@ -1,0 +1,52 @@
+diff --git a/tests/Integration/CreateUserTest.php b/tests/Integration/CreateUserTest.php
+index 5962a40..430bd83 100644
+--- a/tests/Integration/CreateUserTest.php
++++ b/tests/Integration/CreateUserTest.php
+@@ -4,23 +4,15 @@ declare(strict_types=1);
+ 
+ namespace App\Tests\Integration;
+ 
+-use Basis\Nats\Client;
+-use App\Repository\UserRepository;
++use App\Tests\Config\TestContainersWebTestCase;
+ use Symfony\Component\HttpFoundation\JsonResponse;
+-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+ 
+-class CreateUserTest extends WebTestCase
++class CreateUserTest extends TestContainersWebTestCase
+ {
+     public function testCreateUserWithoutOnboardWithMockedRepository()
+     {
+-        $userRepository = $this->createMock(UserRepository::class);
+-        $userRepository->expects($this->once())
+-            ->method('save');
+-
+         $client = static::createClient();
+ 
+-        $client->getContainer()->set(UserRepository::class, $userRepository);
+-
+         $input = json_encode([
+             'email'    => 'test@example.com',
+             'password' => 'password',
+@@ -37,21 +29,8 @@ class CreateUserTest extends WebTestCase
+ 
+     public function testCreateUserWithOnboardWithMockedRepository()
+     {
+-        $userRepository = $this->createMock(UserRepository::class);
+-        $userRepository->expects($this->once())
+-            ->method('save');
+-
+-        $natsClient = $this->createMock(Client::class);
+-        $natsClient->expects($this->once())
+-            ->method('publish');
+-        $natsClient->expects($this->once())
+-            ->method('process');
+-
+         $client = static::createClient();
+ 
+-        $client->getContainer()->set(UserRepository::class, $userRepository);
+-        $client->getContainer()->set(Client::class, $natsClient);
+-
+         $input = json_encode([
+             'email'    => 'test@example.com',
+             'password' => 'password',

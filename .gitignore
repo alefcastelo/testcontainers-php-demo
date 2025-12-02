@@ -9,5 +9,3 @@
 /.phpunit.cache/
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
-/.changes/
-/demo-changes

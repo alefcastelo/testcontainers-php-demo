@@ -1,0 +1,37 @@
+diff --git a/tests/Integration/CreateUserTest.php b/tests/Integration/CreateUserTest.php
+index 430bd83..cb40167 100644
+--- a/tests/Integration/CreateUserTest.php
++++ b/tests/Integration/CreateUserTest.php
+@@ -22,9 +22,14 @@ class CreateUserTest extends TestContainersWebTestCase
+ 
+         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_CREATED);
+ 
+-        $actual = json_decode($client->getResponse()->getContent(), true);
++        $expected = json_encode([
++            'id'    => 2,
++            'email' => 'test@example.com',
++        ]);
++
++        $actual = $client->getResponse()->getContent();
+ 
+-        $this->assertEquals([], array_diff(['email' => 'test@example.com'], $actual));
++        $this->assertJsonStringEqualsJsonString($expected, $actual);
+     }
+ 
+     public function testCreateUserWithOnboardWithMockedRepository()
+@@ -40,8 +45,13 @@ class CreateUserTest extends TestContainersWebTestCase
+ 
+         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_CREATED);
+ 
+-        $actual = json_decode($client->getResponse()->getContent(), true);
++        $expected = json_encode([
++            'id'    => 2,
++            'email' => 'test@example.com',
++        ]);
++
++        $actual = $client->getResponse()->getContent();
+ 
+-        $this->assertEquals([], array_diff(['email' => 'test@example.com'], $actual));
++        $this->assertJsonStringEqualsJsonString($expected, $actual);
+     }
+ }

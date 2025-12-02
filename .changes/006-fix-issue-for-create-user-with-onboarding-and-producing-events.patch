@@ -1,0 +1,29 @@
+diff --git a/tests/Integration/CreateUserTest.php b/tests/Integration/CreateUserTest.php
+index 78ee341..5962a40 100644
+--- a/tests/Integration/CreateUserTest.php
++++ b/tests/Integration/CreateUserTest.php
+@@ -4,6 +4,7 @@ declare(strict_types=1);
+ 
+ namespace App\Tests\Integration;
+ 
++use Basis\Nats\Client;
+ use App\Repository\UserRepository;
+ use Symfony\Component\HttpFoundation\JsonResponse;
+ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+@@ -40,9 +41,16 @@ class CreateUserTest extends WebTestCase
+         $userRepository->expects($this->once())
+             ->method('save');
+ 
++        $natsClient = $this->createMock(Client::class);
++        $natsClient->expects($this->once())
++            ->method('publish');
++        $natsClient->expects($this->once())
++            ->method('process');
++
+         $client = static::createClient();
+ 
+         $client->getContainer()->set(UserRepository::class, $userRepository);
++        $client->getContainer()->set(Client::class, $natsClient);
+ 
+         $input = json_encode([
+             'email'    => 'test@example.com',

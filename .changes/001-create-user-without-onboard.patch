@@ -1,0 +1,38 @@
+diff --git a/tests/Integration/CreateUserTest.php b/tests/Integration/CreateUserTest.php
+new file mode 100644
+index 0000000..0831c6f
+--- /dev/null
++++ b/tests/Integration/CreateUserTest.php
+@@ -0,0 +1,32 @@
++<?php
++
++declare(strict_types=1);
++
++namespace App\Tests\Integration;
++
++use App\Repository\UserRepository;
++use Symfony\Component\HttpFoundation\JsonResponse;
++use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
++
++class CreateUserTest extends WebTestCase
++{
++    public function testCreateUserWithoutOnboardWithMockedRepository()
++    {
++        $userRepository = $this->createMock(UserRepository::class);
++        $userRepository->expects($this->once())
++            ->method('save');
++
++        $client = static::createClient();
++
++        $client->getContainer()->set(UserRepository::class, $userRepository);
++
++        $input = json_encode([
++            'email'    => 'test@example.com',
++            'password' => 'password',
++        ]);
++
++        $client->request('POST', '/users/without-onboard', content: $input);
++
++        $this->assertResponseStatusCodeSame(JsonResponse::HTTP_CREATED);
++    }
++}

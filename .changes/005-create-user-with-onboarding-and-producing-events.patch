@@ -1,0 +1,30 @@
+diff --git a/src/UseCase/CreateUserUseCase.php b/src/UseCase/CreateUserUseCase.php
+index 43c95c2..90c5f59 100644
+--- a/src/UseCase/CreateUserUseCase.php
++++ b/src/UseCase/CreateUserUseCase.php
+@@ -5,6 +5,7 @@ declare(strict_types=1);
+ namespace App\UseCase;
+ 
+ use App\Entity\User;
++use Basis\Nats\Client;
+ use InvalidArgumentException;
+ use App\Repository\UserRepository;
+ 
+@@ -12,6 +13,7 @@ class CreateUserUseCase
+ {
+     public function __construct(
+         protected readonly UserRepository $userRepository,
++        protected readonly Client $natsClient,
+     ) {
+     }
+ 
+@@ -37,6 +39,9 @@ class CreateUserUseCase
+ 
+         $this->userRepository->save($user);
+ 
++        $this->natsClient->publish('user.created', $user->jsonSerialize());
++        $this->natsClient->process();
++
+         return $user;
+     }
+ }
