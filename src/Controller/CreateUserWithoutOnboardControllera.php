@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class CreateUserWithoutOnboardController extends AbstractController
+class CreateUserWithoutOnboardControllera extends AbstractController
 {
     public function __construct(
         protected readonly UserRepository $userRepository,
