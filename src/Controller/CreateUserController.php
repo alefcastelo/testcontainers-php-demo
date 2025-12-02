@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use InvalidArgumentException;
+use App\UseCase\CreateUserUseCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CreateUserController extends AbstractController
 {
     public function __construct(
-        protected readonly UserRepository $userRepository,
+        protected readonly CreateUserUseCase $createComplexUserUseCase,
     ) {
     }
 
@@ -26,22 +26,12 @@ class CreateUserController extends AbstractController
 
         ['email' => $email, 'password' => $password] = $content;
 
-        if (empty($email)) {
-            return new JsonResponse(['error' => 'Email is required'], Response::HTTP_BAD_REQUEST);
+        $userOrException = ($this->createComplexUserUseCase)($email, $password);
+
+        if ($userOrException instanceof InvalidArgumentException) {
+            return new JsonResponse(['error' => $userOrException->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        if (empty($password)) {
-            return new JsonResponse(['error' => 'Password is required'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-
-        $user = new User()
-            ->withEmail($email)
-            ->withPasswordHash($passwordHash);
-
-        $this->userRepository->save($user);
-
-        return new JsonResponse($user, Response::HTTP_CREATED);
+        return new JsonResponse($userOrException, Response::HTTP_CREATED);
     }
 }

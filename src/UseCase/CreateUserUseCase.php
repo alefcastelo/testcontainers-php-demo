@@ -8,7 +8,7 @@ use App\Entity\User;
 use InvalidArgumentException;
 use App\Repository\UserRepository;
 
-class CreateComplexUserUseCase
+class CreateUserUseCase
 {
     public function __construct(
         protected readonly UserRepository $userRepository,
