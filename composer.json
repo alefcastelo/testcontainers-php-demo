@@ -19,8 +19,11 @@
         "symfony/yaml": "7.4.*"
     },
     "require-dev": {
+        "behat/behat": "^3.27",
         "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friendsofphp/php-cs-fixer": "^3.91",
+        "galbar/jsonpath": "^3.0",
+        "jfcherng/php-diff": "^6.16",
         "phpunit/phpunit": "^12.4",
         "symfony/browser-kit": "7.4.*",
         "symfony/css-selector": "7.4.*",
